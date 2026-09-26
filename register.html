@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover { color: #007bff; }
+    .breadcrumbs { padding: 20px 5%; font-size: 14px; color: #666; }
+    .breadcrumbs a { text-decoration: none; color: #333; }
+    .breadcrumbs span { margin: 0 10px; color: #ccc; }
+    .container { display: flex; padding: 20px 5%; max-width: 1200px; margin: 0 auto; gap: 40px; }
+    .main-content { flex: 3; background: #fff; padding: 40px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    h1 { font-size: 36px; margin-top: 0; margin-bottom: 10px; font-weight: 300; color: #222; }
+    .sidebar { flex: 1; padding-top: 20px; }
+    .sidebar-link { display: block; margin-bottom: 15px; text-decoration: none; color: #333; font-size: 18px; }
+    .sidebar-link:hover { text-decoration: underline; }
+
+    .info-text { margin-bottom: 28px; font-size: 14px; color: #666; background: #f0f7ff; padding: 14px; border-radius: 4px; border-left: 4px solid #007bff; }
+    .info-text a { color: #007bff; text-decoration: none; font-weight: 600; }
+    .info-text a:hover { text-decoration: underline; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 18px; position: relative; }
+    .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 7px; color: #333; }
+    .required { color: #dc3545; margin-right: 3px; }
+    .form-input { width: 100%; padding: 12px 40px 12px 14px; border: 1px solid #ddd; border-radius: 4px; font-size: 15px; box-sizing: border-box; background: #fff; transition: all 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .form-input:focus { border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); outline: none; }
+    .form-input.valid   { border-color: #28a745; }
+    .form-input.invalid { border-color: #dc3545; }
+    .toggle-password { position: absolute; right: 13px; bottom: 13px; color: #999; cursor: pointer; font-size: 15px; transition: color 0.3s; }
+    .toggle-password:hover { color: #007bff; }
+    .field-msg { font-size: 12px; margin-top: 5px; min-height: 16px; }
+    .field-msg.ok  { color: #28a745; }
+    .field-msg.err { color: #dc3545; }
+
+    /* Password strength */
+    .strength-bars { display: flex; gap: 4px; margin-top: 8px; }
+    .strength-bar { flex: 1; height: 4px; border-radius: 2px; background: #eee; transition: all 0.3s; }
+    .strength-bar.weak   { background: #dc3545; }
+    .strength-bar.medium { background: #ffc107; }
+    .strength-bar.strong { background: #28a745; }
+    .strength-label { font-size: 12px; color: #666; margin-top: 5px; }
+    .req-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+    .req { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+    .req.met { color: #28a745; }
+    .req i { font-size: 10px; }
+
+    .checkbox-group { margin: 20px 0; display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #555; }
+    .checkbox-group input { margin-top: 3px; }
+    .checkbox-group a { color: #007bff; text-decoration: none; }
+
+    .submit-btn { background-color: #007bff; color: white; border: none; padding: 14px 40px; font-size: 16px; cursor: pointer; border-radius: 4px; font-weight: 600; transition: background 0.3s, transform 0.2s; font-family: 'Segoe UI', sans-serif; }
+    .submit-btn:hover { background-color: #0056b3; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .server-error { background: #fff3f3; border: 1px solid #f5c6cb; color: #dc3545; border-radius: 4px; padding: 12px 16px; font-size: 14px; margin-bottom: 20px; display: none; }
+
+    @media (max-width: 768px) { .container { flex-direction: column; } .form-row { grid-template-columns: 1fr; } .main-nav { flex-direction: column; gap: 10px; } .main-nav a { margin: 0 10px; } .req-list { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/system?module=info&section=company&ver=2">О компании</a>
+      <a href="/api?method=get&type=catalog&format=json">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0">Контакты</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumbs">
+    <a href="/"><i class="fas fa-home"></i> Главная</a>
+    <span>›</span>
+    <a href="/account?view=dashboard&tab=profile&uid=me">Личный кабинет</a>
+    <span>›</span>
+    Регистрация
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Регистрация</h1>
+
+      <div class="info-text">
+        <i class="fas fa-info-circle"></i>
+        Если вы уже зарегистрированы, перейдите на страницу <a href="/auth?mode=signin&provider=local&redirect=1">авторизации</a>.
+      </div>
+
+      <div class="server-error" id="serverError"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label"><span class="required">*</span> Имя</label>
+          <input type="text" id="firstName" class="form-input" placeholder="Иван" maxlength="50" autocomplete="given-name">
+          <div class="field-msg" id="firstNameMsg"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="required">*</span> Фамилия</label>
+          <input type="text" id="lastName" class="form-input" placeholder="Иванов" maxlength="50" autocomplete="family-name">
+          <div class="field-msg" id="lastNameMsg"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> E-Mail</label>
+        <input type="email" id="email" class="form-input" placeholder="example@mail.ru" maxlength="255" autocomplete="email">
+        <div class="field-msg" id="emailMsg"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Телефон</label>
+        <input type="tel" id="phone" class="form-input" placeholder="+7 (999) 000-00-00" maxlength="20" autocomplete="tel">
+        <div class="field-msg" id="phoneMsg"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> Пароль</label>
+        <input type="password" id="password" class="form-input" placeholder="Придумайте пароль" maxlength="128" autocomplete="new-password">
+        <i class="fas fa-eye toggle-password" id="togglePass" onclick="togglePass('password','togglePass')"></i>
+        <div id="strengthWrap" style="display:none;">
+          <div class="strength-bars">
+            <div class="strength-bar" id="sb1"></div>
+            <div class="strength-bar" id="sb2"></div>
+            <div class="strength-bar" id="sb3"></div>
+            <div class="strength-bar" id="sb4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+          <div class="req-list">
+            <div class="req" id="req-len"><i class="fas fa-circle"></i> Мин. 8 символов</div>
+            <div class="req" id="req-upper"><i class="fas fa-circle"></i> Заглавная буква</div>
+            <div class="req" id="req-lower"><i class="fas fa-circle"></i> Строчная буква</div>
+            <div class="req" id="req-digit"><i class="fas fa-circle"></i> Цифра</div>
+            <div class="req" id="req-special"><i class="fas fa-circle"></i> Спецсимвол</div>
+          </div>
+        </div>
+        <div class="field-msg" id="passwordMsg"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> Повтор пароля</label>
+        <input type="password" id="confirmPassword" class="form-input" placeholder="Повторите пароль" maxlength="128" autocomplete="new-password">
+        <i class="fas fa-eye toggle-password" id="toggleConfirm" onclick="togglePass('confirmPassword','toggleConfirm')"></i>
+        <div class="field-msg" id="confirmMsg"></div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms">
+        <label for="terms">Я согласен с <a href="#">условиями обработки персональных данных</a> и <a href="#">политикой конфиденциальности</a></label>
+      </div>
+
+      <button class="submit-btn" id="regBtn" onclick="submitRegister()">Зарегистрироваться</button>
+
+      <!-- Блок ввода кода — скрыт до отправки формы -->
+      <div id="codeBlock" style="display:none; margin-top:28px; padding:20px; background:#f0f7ff; border-radius:8px; border-left:4px solid #007bff;">
+        <p style="margin:0 0 6px; font-weight:600; color:#1a1a2e;">📧 Письмо отправлено!</p>
+        <p style="margin:0 0 16px; font-size:14px; color:#555;">Введите 6-значный код из письма. Проверьте папку «Спам» если письмо не пришло.</p>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Код подтверждения</label>
+          <input type="text" id="verifyCode" class="form-input" placeholder="AB3X7KP2" maxlength="8"
+                 style="font-size:24px; letter-spacing:6px; text-align:center; font-weight:700; text-transform:uppercase;"
+                 oninput="this.value=this.value.toUpperCase().replace(/[^A-Z2-9]/g,'')">
+          <p style="margin:6px 0 0; font-size:12px; color:#888;">Заглавные буквы и цифры. Проверьте папку «Спам».</p>
+          <div class="field-msg" id="codeMsg"></div>
+        </div>
+        <button class="submit-btn" id="verifyBtn" onclick="submitCode()" style="width:100%;">Подтвердить email</button>
+        <p style="margin:12px 0 0; font-size:13px; color:#888; text-align:center;">
+          Не получили код? <a href="#" onclick="resendCode(event)" style="color:#007bff;">Отправить повторно</a>
+        </p>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <a href="/auth?mode=signin&provider=local&redirect=1"    class="sidebar-link" style="font-weight:500;">Вход</a>
+      <a href="/auth?mode=signup&provider=local&step=1" class="sidebar-link" style="font-weight:bold;color:#007bff;">Регистрация</a>
+      <a href="#"             class="sidebar-link">Забыли пароль?</a>
+    </aside>
+  </div>
+
+  <script>
+    function togglePass(inputId, iconId) {
+      const inp  = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      icon.classList.toggle('fa-eye',       !show);
+      icon.classList.toggle('fa-eye-slash',  show);
+    }
+
+    function setMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.className = 'field-msg ' + type;
+      el.textContent = text;
+    }
+    function setValid(id, valid) {
+      const el = document.getElementById(id);
+      el.classList.toggle('valid',   valid);
+      el.classList.toggle('invalid', !valid);
+    }
+    function setReq(id, met) {
+      const el = document.getElementById(id);
+      el.classList.toggle('met', met);
+      el.querySelector('i').className = met ? 'fas fa-check-circle' : 'fas fa-circle';
+    }
+
+    document.getElementById('firstName').addEventListener('blur', function() {
+      const v = this.value.trim();
+      const ok = v.length >= 2;
+      setValid('firstName', ok); setMsg('firstNameMsg', ok ? '' : 'Минимум 2 символа', ok ? 'ok' : 'err');
+    });
+    document.getElementById('lastName').addEventListener('blur', function() {
+      const v = this.value.trim();
+      const ok = v.length >= 2;
+      setValid('lastName', ok); setMsg('lastNameMsg', ok ? '' : 'Минимум 2 символа', ok ? 'ok' : 'err');
+    });
+    document.getElementById('email').addEventListener('blur', function() {
+      const v = this.value.trim();
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      setValid('email', ok && v); setMsg('emailMsg', !v ? 'Введите email' : !ok ? 'Некорректный email' : '', ok && v ? 'ok' : 'err');
+    });
+    document.getElementById('password').addEventListener('input', function() {
+      const val = this.value;
+      document.getElementById('strengthWrap').style.display = val ? 'block' : 'none';
+      const hasLen = val.length >= 8, hasUpper = /[A-ZА-ЯЁ]/.test(val),
+            hasLower = /[a-zа-яё]/.test(val), hasDigit = /\d/.test(val),
+            hasSpec  = /[^A-Za-zА-Яа-яЁё0-9]/.test(val);
+      setReq('req-len',     hasLen);
+      setReq('req-upper',   hasUpper);
+      setReq('req-lower',   hasLower);
+      setReq('req-digit',   hasDigit);
+      setReq('req-special', hasSpec);
+      const score = [hasLen,hasUpper,hasLower,hasDigit,hasSpec].filter(Boolean).length;
+      const cls   = score <= 2 ? 'weak' : score <= 3 ? 'medium' : 'strong';
+      const fill  = score <= 2 ? 1 : score <= 3 ? 2 : 4;
+      ['sb1','sb2','sb3','sb4'].forEach((id,i) => {
+        document.getElementById(id).className = 'strength-bar ' + (i < fill ? cls : '');
+      });
+      document.getElementById('strengthLabel').textContent =
+        score <= 2 ? 'Слабый пароль' : score <= 3 ? 'Средний пароль' : 'Надёжный пароль';
+      const cv = document.getElementById('confirmPassword').value;
+      if (cv) { const ok = cv === val; setValid('confirmPassword', ok); setMsg('confirmMsg', ok ? 'Пароли совпадают' : 'Пароли не совпадают', ok ? 'ok' : 'err'); }
+    });
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+      const ok = this.value === document.getElementById('password').value;
+      setValid('confirmPassword', ok && this.value);
+      setMsg('confirmMsg', this.value ? (ok ? 'Пароли совпадают' : 'Пароли не совпадают') : '', ok && this.value ? 'ok' : 'err');
+    });
+    document.getElementById('phone').addEventListener('keydown', function(e) {
+      // Разрешаем: цифры, Backspace, Delete, стрелки, Tab, +
+      const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Tab','Home','End'];
+      if (!allowed.includes(e.key) && !/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+    document.getElementById('phone').addEventListener('input', function() {
+      // Убираем всё кроме цифр
+      let d = this.value.replace(/\D/g,'');
+      // 8 → 7
+      if (d.startsWith('8')) d = '7' + d.slice(1);
+      // Автоматически добавляем +7 если начали вводить с 9
+      if (d.startsWith('9')) d = '7' + d;
+      // Форматируем: +7 (XXX) XXX-XX-XX
+      if (d.length === 0) { this.value = ''; return; }
+      if (d.startsWith('7')) {
+        const n = d.slice(1);
+        let result = '+7';
+        if (n.length > 0) result += ' (' + n.slice(0,3);
+        if (n.length >= 3) result += ') ' + n.slice(3,6);
+        if (n.length >= 6) result += '-' + n.slice(6,8);
+        if (n.length >= 8) result += '-' + n.slice(8,10);
+        this.value = result;
+      } else {
+        // Не российский номер — просто цифры
+        this.value = '+' + d.slice(0,15);
+      }
+      // Подсветка валидности
+      const digits = this.value.replace(/\D/g,'');
+      const ok = digits.length === 11;
+      if (this.value) {
+        setValid('phone', ok);
+        setMsg('phoneMsg', ok ? '' : 'Введите полный номер телефона', ok ? 'ok' : 'err');
+      }
+    });
+    document.getElementById('phone').addEventListener('paste', function(e) {
+      e.preventDefault();
+      // При вставке берём только цифры
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      const fakeEvent = { target: { value: pasted } };
+      this.value = pasted;
+      this.dispatchEvent(new Event('input'));
+    });
+
+    let _regEmail = '';
+
+    async function submitRegister() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const phone     = document.getElementById('phone').value.trim();
+      const password  = document.getElementById('password').value;
+      const confirm   = document.getElementById('confirmPassword').value;
+      const terms     = document.getElementById('terms').checked;
+      const errBox    = document.getElementById('serverError');
+      errBox.style.display = 'none';
+
+      if (!firstName || firstName.length < 2) { setMsg('firstNameMsg','Введите имя','err'); return; }
+      if (!lastName  || lastName.length < 2)  { setMsg('lastNameMsg','Введите фамилию','err'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setMsg('emailMsg','Некорректный email','err'); return; }
+      if (password.length < 8)  { setMsg('passwordMsg','Пароль слишком короткий','err'); return; }
+      if (password !== confirm)  { setMsg('confirmMsg','Пароли не совпадают','err'); return; }
+      if (!terms) { errBox.textContent = 'Примите условия использования'; errBox.style.display='block'; return; }
+
+      _regEmail = email;
+      const btn = document.getElementById('regBtn');
+      btn.disabled = true; btn.textContent = 'Отправка...';
+      try {
+        const res  = await fetch('/register.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({firstName,lastName,email,phone,password}) });
+        const data = await res.json();
+        if (data.ok) {
+          // Показываем блок ввода кода
+          document.getElementById('codeBlock').style.display = 'block';
+          document.getElementById('codeBlock').scrollIntoView({behavior:'smooth'});
+          btn.textContent = 'Код отправлен ✓';
+        } else {
+          errBox.textContent = data.message||'Ошибка сервера';
+          errBox.style.display='block';
+          btn.disabled=false;
+          btn.textContent='Зарегистрироваться';
+        }
+      } catch(e) {
+        errBox.textContent = 'Сервер недоступен';
+        errBox.style.display = 'block'; btn.disabled=false; btn.textContent='Зарегистрироваться';
+      }
+    }
+
+    async function submitCode() {
+      const code   = document.getElementById('verifyCode').value.trim();
+      const errBox = document.getElementById('serverError');
+      errBox.style.display = 'none';
+      if (code.length !== 8) { setMsg('codeMsg','Введите 8-символьный код из письма','err'); return; }
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true; btn.textContent = 'Проверка...';
+      try {
+        const res  = await fetch('/verify_code.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: _regEmail, code}) });
+        const data = await res.json();
+        if (data.ok) {
+          setMsg('codeMsg','✓ Email подтверждён! Переходим в профиль...','ok');
+          setTimeout(() => { window.location.href = '/account?view=dashboard&tab=profile&uid=me'; }, 1500);
+        } else {
+          setMsg('codeMsg', data.message||'Неверный код', 'err');
+          btn.disabled=false; btn.textContent='Подтвердить email';
+        }
+      } catch(e) {
+        setMsg('codeMsg','Ошибка соединения','err');
+        btn.disabled=false; btn.textContent='Подтвердить email';
+      }
+    }
+
+    async function resendCode(e) {
+      e.preventDefault();
+      if (!_regEmail) return;
+      // Повторно нажимаем кнопку регистрации — она перезапустит отправку
+      const btn = document.getElementById('regBtn');
+      btn.disabled = false;
+      await submitRegister();
+    }
+  </script>
+</body>
+</html>

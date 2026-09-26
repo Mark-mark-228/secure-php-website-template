@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover, .main-nav a.active { color: #007bff; }
+    .breadcrumbs { padding: 20px 5%; font-size: 14px; color: #666; }
+    .breadcrumbs a { text-decoration: none; color: #333; }
+    .breadcrumbs span { margin: 0 10px; color: #ccc; }
+    .container { display: flex; padding: 20px 5%; max-width: 1200px; margin: 0 auto; gap: 40px; }
+    .main-content { flex: 3; background: #fff; padding: 40px; border-radius: 4px; }
+    h1 { font-size: 36px; margin-top: 0; margin-bottom: 30px; font-weight: 300; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    h2 { font-size: 22px; margin: 30px 0 20px; font-weight: 500; }
+    p { line-height: 1.8; color: #555; font-size: 16px; margin-bottom: 20px; }
+    .sidebar { flex: 1; padding-top: 20px; }
+    .sidebar-link { display: block; margin-bottom: 15px; text-decoration: none; color: #333; font-size: 18px; }
+    .sidebar-link:hover { text-decoration: underline; }
+    .sidebar-box { margin-top: 30px; padding: 20px; background: #f0f4f8; border-radius: 4px; }
+    .sidebar-box h4 { margin-top: 0; }
+    .sidebar-box p { font-size: 14px; margin-bottom: 5px; line-height: 1.9; }
+
+    /* Contact block */
+    .contact-info-block { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 28px; margin-bottom: 30px; }
+    .contact-item { display: flex; align-items: flex-start; margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid #eee; }
+    .contact-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .contact-icon { width: 46px; height: 46px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; margin-right: 18px; flex-shrink: 0; }
+    .contact-details h3 { margin: 0 0 4px; font-size: 16px; }
+    .contact-details p { margin: 0; font-size: 14px; color: #666; }
+    .contact-details a { color: #007bff; text-decoration: none; }
+    .contact-details a:hover { text-decoration: underline; }
+
+    /* Social */
+    .social-buttons { display: flex; gap: 12px; margin-top: 24px; }
+    .social-btn { width: 46px; height: 46px; border-radius: 50%; color: white; font-size: 20px; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: transform 0.3s, box-shadow 0.3s; }
+    .social-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .soc-telegram { background: #0088cc; }
+    .soc-whatsapp { background: #25D366; }
+    .soc-vk       { background: #0077FF; }
+    .soc-email    { background: #EA4335; }
+
+    /* Map */
+    .map-container { margin-top: 30px; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
+    .map-container iframe { display: block; width: 100%; height: 280px; border: none; }
+
+    /* Contact form */
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 7px; }
+    .form-input, .form-textarea { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 14px; color: #333; box-sizing: border-box; transition: border-color 0.3s; }
+    .form-input:focus, .form-textarea:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+    .form-textarea { resize: vertical; min-height: 110px; }
+    .submit-btn { background-color: #007bff; color: white; border: none; padding: 13px 32px; font-size: 15px; cursor: pointer; border-radius: 4px; font-weight: 600; transition: background 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .submit-btn:hover { background-color: #0056b3; }
+    .success-msg { display: none; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; padding: 12px 16px; font-size: 14px; color: #155724; margin-top: 14px; }
+
+    @media (max-width: 768px) { .container { flex-direction: column; } .main-nav { flex-direction: column; gap: 10px; } .main-nav a { margin: 0 10px; } .contact-item { flex-direction: column; align-items: center; text-align: center; } .contact-icon { margin-right: 0; margin-bottom: 10px; } }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/system?module=info&section=company&ver=2">О компании</a>
+      <a href="/api?method=get&type=catalog&format=json">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0" class="active">Контакты</a>
+      <a href="/account?view=dashboard&tab=profile&uid=me">Личный кабинет</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumbs">
+    <a href="/"><i class="fas fa-home"></i> Главная</a>
+    <span>›</span> Контакты
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Контакты</h1>
+      <p>Мы всегда рады ответить на ваши вопросы. Выберите удобный способ связи и напишите нам!</p>
+
+      <div class="contact-info-block">
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="contact-details">
+            <h3>Адрес</h3>
+            <p>г. Город, ул. Название, д. X</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-details">
+            <h3>Телефон</h3>
+            <p><a href="tel:+70000000000">+7 (000) 000-00-00</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div class="contact-details">
+            <h3>Email</h3>
+            <p><a href="mailto:info@company.ru">info@company.ru</a></p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fab fa-telegram-plane"></i></div>
+          <div class="contact-details">
+            <h3>Telegram</h3>
+            <p><a href="https://t.me/your_telegram" target="_blank" rel="noopener">@your_telegram</a></p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="margin-bottom:16px;">Мы в социальных сетях:</h3>
+          <div class="social-buttons">
+            <a href="#" class="social-btn soc-telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" class="social-btn soc-whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="social-btn soc-vk" title="ВКонтакте"><i class="fab fa-vk"></i></a>
+            <a href="#" class="social-btn soc-email" title="Email"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-container">
+        <!-- Замените на iframe вашего адреса с Яндекс.Карт -->
+        <iframe src="https://yandex.ru/map-widget/v1/?ll=37.617700%2C55.755800&z=14&pt=37.617700,55.755800,pm2rdm" title="Карта" allowfullscreen></iframe>
+      </div>
+
+      <h2>Написать нам</h2>
+      <div class="form-group">
+        <label class="form-label">Ваше имя *</label>
+        <input type="text" id="c_name" class="form-input" placeholder="Имя Фамилия">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Телефон или Email *</label>
+        <input type="text" id="c_contact" class="form-input" placeholder="+7 (000) 000-00-00 или email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Сообщение *</label>
+        <textarea id="c_message" class="form-textarea" placeholder="Расскажите подробнее..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i> Отправить сообщение
+      </button>
+      <div class="success-msg" id="cSuccessMsg">
+        <i class="fas fa-check-circle"></i> Сообщение отправлено! Свяжемся с вами скоро.
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <a href="/api?method=get&type=catalog&format=json" class="sidebar-link">Наши услуги</a>
+      <a href="/system?module=info&section=company&ver=2"    class="sidebar-link">О компании</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25"  class="sidebar-link">Отзывы</a>
+      <a href="/account?view=dashboard&tab=profile&uid=me"  class="sidebar-link">Личный кабинет</a>
+      <a href="/auth?mode=signin&provider=local&redirect=1"    class="sidebar-link">Вход</a>
+      <a href="/auth?mode=signup&provider=local&step=1" class="sidebar-link">Регистрация</a>
+      <div class="sidebar-box">
+        <h4>Режим работы</h4>
+        <p>
+          <i class="far fa-clock"></i> Пн–Пт: 9:00 – 18:00<br>
+          <i class="far fa-clock"></i> Сб–Вс: Выходной
+        </p>
+        <a href="/" style="display:inline-block;background:#333;color:white;padding:10px 20px;text-decoration:none;border-radius:4px;font-size:14px;">На главную</a>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const name    = document.getElementById('c_name').value.trim();
+      const contact = document.getElementById('c_contact').value.trim();
+      const message = document.getElementById('c_message').value.trim();
+      if (!name)    { alert('Введите ваше имя'); return; }
+      if (!contact) { alert('Укажите телефон или email'); return; }
+      if (!message) { alert('Напишите сообщение'); return; }
+      // В продакшене: fetch('/contact.php', ...)
+      const msg = document.getElementById('cSuccessMsg');
+      msg.style.display = 'block';
+      document.getElementById('c_name').value    = '';
+      document.getElementById('c_contact').value = '';
+      document.getElementById('c_message').value = '';
+      setTimeout(() => msg.style.display = 'none', 5000);
+    }
+  </script>
+</body>
+</html>

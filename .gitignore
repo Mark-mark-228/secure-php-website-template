@@ -1,0 +1,11 @@
+# Локальные настройки и секреты
+config.php
+
+# Библиотека PHPMailer (скачивается отдельно, см. README)
+phpmailer/
+vendor/
+
+# Служебное
+.DS_Store
+Thumbs.db
+*.log

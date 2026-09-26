@@ -1,0 +1,40 @@
+# === (Необязательно) Пускать трафик только через ваш WAF / обратный прокси ===
+# Раскомментируйте и подставьте IP-адреса вашего WAF (ниже — адрес из тестового диапазона):
+# <RequireAny>
+#     Require ip 203.0.113.10
+# </RequireAny>
+
+# === Маскировка адресов страниц ===
+RewriteEngine On
+
+# about.html → /system?module=info&section=company&ver=2
+RewriteCond %{QUERY_STRING} ^module=info&section=company&ver=2$
+RewriteRule ^system$ about.html [L,QSA]
+
+# services.html → /api?method=get&type=catalog&format=json
+RewriteCond %{QUERY_STRING} ^method=get&type=catalog&format=json$
+RewriteRule ^api$ services.html [L,QSA]
+
+# reviews.html → /list?clickstat=yes&p_num=1&func=webdomain&tab_id=25
+RewriteCond %{QUERY_STRING} ^clickstat=yes&p_num=1&func=webdomain&tab_id=25$
+RewriteRule ^list$ reviews.html [L,QSA]
+
+# contacts.html → /handler?action=support&ref=nav&session=0
+RewriteCond %{QUERY_STRING} ^action=support&ref=nav&session=0$
+RewriteRule ^handler$ contacts.html [L,QSA]
+
+# login.html → /auth?mode=signin&provider=local&redirect=1
+RewriteCond %{QUERY_STRING} ^mode=signin&provider=local&redirect=1$
+RewriteRule ^auth$ login.html [L,QSA]
+
+# register.html → /auth?mode=signup&provider=local&step=1
+RewriteCond %{QUERY_STRING} ^mode=signup&provider=local&step=1$
+RewriteRule ^auth$ register.html [L,QSA]
+
+# profile.html → /account?view=dashboard&tab=profile&uid=me
+RewriteCond %{QUERY_STRING} ^view=dashboard&tab=profile&uid=me$
+RewriteRule ^account$ profile.html [L,QSA]
+
+# admin_reviews.html → /manage?panel=content&type=reviews&access=restricted
+RewriteCond %{QUERY_STRING} ^panel=content&type=reviews&access=restricted$
+RewriteRule ^manage$ admin_reviews.html [L,QSA]

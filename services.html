@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Услуги — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover, .main-nav a.active { color: #007bff; }
+    .breadcrumbs { padding: 20px 5%; font-size: 14px; color: #666; }
+    .breadcrumbs a { text-decoration: none; color: #333; }
+    .breadcrumbs span { margin: 0 10px; color: #ccc; }
+    .container { display: flex; padding: 20px 5%; max-width: 1200px; margin: 0 auto; gap: 40px; }
+    .main-content { flex: 3; background: #fff; padding: 40px; border-radius: 4px; }
+    h1 { font-size: 36px; margin-top: 0; margin-bottom: 30px; font-weight: 300; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    p { line-height: 1.8; color: #555; font-size: 16px; margin-bottom: 20px; }
+    .sidebar { flex: 1; padding-top: 20px; }
+    .sidebar-link { display: block; margin-bottom: 15px; text-decoration: none; color: #333; font-size: 18px; }
+    .sidebar-link:hover { text-decoration: underline; }
+    .sidebar-box { margin-top: 30px; padding: 20px; background: #f0f4f8; border-radius: 4px; }
+    .sidebar-box h4 { margin-top: 0; margin-bottom: 12px; }
+    .sidebar-box p { font-size: 14px; margin-bottom: 15px; }
+    .sidebar-box a.btn { display: inline-block; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-size: 14px; transition: background 0.3s; }
+    .sidebar-box a.btn:hover { background: #0056b3; }
+
+    /* Services grid */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; margin-top: 10px; }
+    .service-card { border: 1px solid #e0e0e0; border-radius: 6px; padding: 28px; background: #fff; display: flex; flex-direction: column; transition: all 0.3s; }
+    .service-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-3px); border-color: #bbb; }
+    .service-number { font-size: 42px; font-weight: bold; color: #007bff; line-height: 1; margin-bottom: 15px; }
+    .service-card h3 { margin: 0 0 10px; font-size: 20px; }
+    .service-card p { color: #666; font-size: 14px; line-height: 1.6; margin: 0; flex-grow: 1; }
+    .service-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 15px; }
+    .tag { background: #f0f4f8; color: #555; font-size: 12px; padding: 4px 10px; border-radius: 4px; }
+    .service-link { display: inline-block; margin-top: 15px; color: #007bff; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .service-link:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) { .container { flex-direction: column; } .main-nav { flex-direction: column; gap: 10px; } .main-nav a { margin: 0 10px; } }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/system?module=info&section=company&ver=2">О компании</a>
+      <a href="/api?method=get&type=catalog&format=json" class="active">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0">Контакты</a>
+      <a href="/account?view=dashboard&tab=profile&uid=me">Личный кабинет</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumbs">
+    <a href="/"><i class="fas fa-home"></i> Главная</a>
+    <span>›</span> Услуги
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Наши услуги</h1>
+      <p>Мы предлагаем широкий спектр профессиональных решений для вашего бизнеса. Выберите интересующую вас категорию ниже.</p>
+
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-number">1</div>
+          <h3>Услуга №1</h3>
+          <p>Краткое описание первой услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">2</div>
+          <h3>Услуга №2</h3>
+          <p>Краткое описание второй услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">3</div>
+          <h3>Услуга №3</h3>
+          <p>Краткое описание третьей услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">4</div>
+          <h3>Услуга №4</h3>
+          <p>Краткое описание четвёртой услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">5</div>
+          <h3>Услуга №5</h3>
+          <p>Краткое описание пятой услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">6</div>
+          <h3>Услуга №6</h3>
+          <p>Краткое описание шестой услуги. Укажите, что входит и какой результат получит клиент.</p>
+          <div class="tags"><span class="tag">Тег 1</span><span class="tag">Тег 2</span></div>
+          <a href="#" class="service-link">Подробнее →</a>
+        </div>
+
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <a href="/system?module=info&section=company&ver=2"    class="sidebar-link">О компании</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25"  class="sidebar-link">Отзывы</a>
+      <a href="/auth?mode=signin&provider=local&redirect=1"    class="sidebar-link">Вход в кабинет</a>
+      <a href="/auth?mode=signup&provider=local&step=1" class="sidebar-link">Регистрация</a>
+      <a href="/handler?action=support&ref=nav&session=0" class="sidebar-link">Контакты</a>
+      <div class="sidebar-box">
+        <h4>Нужна консультация?</h4>
+        <p>Оставьте заявку и мы свяжемся с вами.</p>
+        <a href="/handler?action=support&ref=nav&session=0" class="btn">Связаться</a>
+      </div>
+    </aside>
+  </div>
+
+</body>
+</html>

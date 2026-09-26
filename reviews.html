@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отзывы — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover, .main-nav a.active { color: #007bff; }
+    .breadcrumbs { padding: 20px 5%; font-size: 14px; color: #666; }
+    .breadcrumbs a { text-decoration: none; color: #333; }
+    .breadcrumbs span { margin: 0 10px; color: #ccc; }
+    .container { display: flex; padding: 20px 5%; max-width: 1200px; margin: 0 auto; gap: 40px; }
+    .main-content { flex: 3; background: #fff; padding: 40px; border-radius: 4px; }
+    h1 { font-size: 36px; margin-top: 0; margin-bottom: 10px; font-weight: 300; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    h2 { font-size: 22px; margin: 0 0 16px; font-weight: 500; }
+    p { line-height: 1.8; color: #555; font-size: 16px; margin-bottom: 20px; }
+    .sidebar { flex: 1; padding-top: 20px; }
+    .sidebar-link { display: block; margin-bottom: 15px; text-decoration: none; color: #333; font-size: 18px; }
+    .sidebar-link:hover { text-decoration: underline; }
+    .sidebar-box { margin-top: 30px; padding: 20px; background: #f0f4f8; border-radius: 4px; }
+    .sidebar-box h4 { margin-top: 0; margin-bottom: 12px; }
+    .sidebar-box p { font-size: 14px; margin-bottom: 15px; }
+    .section-divider { border: none; border-top: 2px solid #007bff; margin: 0 0 24px; width: 50px; }
+    .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .reviews-count { font-size: 13px; color: #888; background: #f0f4f8; padding: 4px 12px; border-radius: 20px; }
+
+    /* Скроллируемый контейнер */
+    .reviews-scroll-wrap {
+      height: 500px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #fafafa;
+      margin-bottom: 36px;
+    }
+    .reviews-scroll-wrap::-webkit-scrollbar { width: 5px; }
+    .reviews-scroll-wrap::-webkit-scrollbar-track { background: #f0f0f0; }
+    .reviews-scroll-wrap::-webkit-scrollbar-thumb { background: #007bff; border-radius: 4px; }
+
+    .reviews-list { display: flex; flex-direction: column; }
+    .reviews-loading { text-align: center; padding: 60px 20px; color: #aaa; font-size: 14px; }
+    .review-card { background: #fff; border-bottom: 1px solid #eee; padding: 20px 24px; transition: background 0.2s; }
+    .review-card:last-child { border-bottom: none; }
+    .review-card:hover { background: #f8f9fa; }
+    .review-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .reviewer { display: flex; align-items: center; gap: 12px; }
+    .reviewer-avatar { width: 40px; height: 40px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; flex-shrink: 0; }
+    .reviewer-name { font-weight: 600; font-size: 15px; }
+    .reviewer-meta { font-size: 12px; color: #888; margin-top: 2px; }
+    .stars { color: #f5a623; font-size: 14px; letter-spacing: 2px; white-space: nowrap; }
+    .review-service { font-size: 11px; color: #007bff; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .review-text { font-size: 14px; color: #555; line-height: 1.7; margin: 0; }
+    .verified-badge {
+      display: inline-block; position: relative;
+      width: 18px; height: 18px;
+      margin-left: 6px; vertical-align: middle; flex-shrink: 0; cursor: default;
+    }
+    .verified-badge .fa-certificate {
+      font-size: 18px; line-height: 18px;
+      animation: badge-shimmer 2.5s ease-in-out infinite;
+    }
+    .verified-badge .fa-check {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 9px; color: #fff; font-weight: 900; -webkit-text-stroke: 0.5px #fff;
+    }
+    @keyframes badge-shimmer {
+      0%   { color: #1d9bf0; filter: drop-shadow(0 0 2px rgba(29,155,240,0.8)); }
+      50%  { color: #00d2ff; filter: drop-shadow(0 0 5px rgba(0,210,255,1));    }
+      100% { color: #1d9bf0; filter: drop-shadow(0 0 2px rgba(29,155,240,0.8)); }
+    }
+
+    /* Форма */
+    .review-form { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 7px; color: #333; }
+    .form-input, .form-textarea, .form-select { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 14px; color: #333; box-sizing: border-box; transition: border-color 0.3s; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+    .form-textarea { resize: vertical; min-height: 100px; }
+    .star-rating { display: flex; gap: 6px; flex-direction: row-reverse; justify-content: flex-end; margin-top: 4px; }
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; color: #ddd; cursor: pointer; transition: color 0.2s; }
+    .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label { color: #f5a623; }
+    .submit-btn { background-color: #007bff; color: white; border: none; padding: 13px 32px; font-size: 15px; cursor: pointer; border-radius: 4px; font-weight: 600; transition: background 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .submit-btn:hover { background-color: #0056b3; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .success-msg { display:none; background:#d4edda; border:1px solid #c3e6cb; border-radius:4px; padding:12px 16px; font-size:14px; color:#155724; margin-top:14px; }
+    .error-msg   { display:none; background:#fff3f3; border:1px solid #f5c6cb; border-radius:4px; padding:12px 16px; font-size:14px; color:#dc3545; margin-top:14px; }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .main-nav { flex-direction: column; gap: 10px; }
+      .main-nav a { margin: 0 10px; }
+      .reviews-scroll-wrap { height: 350px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/system?module=info&section=company&ver=2">О компании</a>
+      <a href="/api?method=get&type=catalog&format=json">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25" class="active">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0">Контакты</a>
+      <a href="/account?view=dashboard&tab=profile&uid=me">Личный кабинет</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumbs">
+    <a href="/"><i class="fas fa-home"></i> Главная</a>
+    <span>›</span> Отзывы
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1>Отзывы клиентов</h1>
+      <p>Мнения наших клиентов о работе с нами. Оставьте свой отзыв — это помогает другим сделать правильный выбор.</p>
+
+      <div class="reviews-header">
+        <h2>Все отзывы</h2>
+        <span class="reviews-count" id="reviewsCount">Загрузка...</span>
+      </div>
+      <hr class="section-divider">
+
+      <!-- Скроллируемый блок отзывов -->
+      <div class="reviews-scroll-wrap" id="reviewsWrap">
+        <div class="reviews-list" id="reviewsList">
+          <div class="reviews-loading"><i class="fas fa-spinner fa-spin"></i>&nbsp; Загрузка отзывов...</div>
+        </div>
+      </div>
+
+      <!-- Форма -->
+      <h2>Оставить отзыв</h2>
+      <hr class="section-divider">
+      <div class="review-form">
+        <!-- Имя берётся автоматически из аккаунта -->
+        <div id="userGreeting" style="background:#f0f7ff;border-left:4px solid #007bff;padding:10px 14px;border-radius:4px;margin-bottom:18px;font-size:14px;color:#333;display:none;">
+          👤 Отзыв будет опубликован от имени: <strong id="userName"></strong>
+        </div>
+        <div id="loginWarning" style="background:#fff8e1;border-left:4px solid #f5a623;padding:10px 14px;border-radius:4px;margin-bottom:18px;font-size:14px;color:#b45309;display:none;">
+          ⚠️ Чтобы оставить отзыв, необходимо <a href="/login.html" style="color:#007bff;font-weight:600;">войти в аккаунт</a>.
+        </div>
+        <div class="form-group">
+          <label class="form-label">Услуга</label>
+          <select id="r_service" class="form-select">
+            <option value="">— Выберите услугу —</option>
+            <option>Услуга №1</option>
+            <option>Услуга №2</option>
+            <option>Услуга №3</option>
+            <option>Услуга №4</option>
+            <option>Услуга №5</option>
+            <option>Услуга №6</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Оценка *</label>
+          <div class="star-rating">
+            <input type="radio" id="s5" name="rating" value="5"><label for="s5">★</label>
+            <input type="radio" id="s4" name="rating" value="4"><label for="s4">★</label>
+            <input type="radio" id="s3" name="rating" value="3"><label for="s3">★</label>
+            <input type="radio" id="s2" name="rating" value="2"><label for="s2">★</label>
+            <input type="radio" id="s1" name="rating" value="1"><label for="s1">★</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ваш отзыв *</label>
+          <textarea id="r_text" class="form-textarea" placeholder="Расскажите о вашем опыте..." maxlength="1000"></textarea>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitReview()">
+          <i class="fas fa-paper-plane"></i> Отправить отзыв
+        </button>
+        <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Спасибо! Ваш отзыв принят.</div>
+        <div class="error-msg"   id="errorMsg"></div>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <a href="/api?method=get&type=catalog&format=json" class="sidebar-link">Наши услуги</a>
+      <a href="/system?module=info&section=company&ver=2"    class="sidebar-link">О компании</a>
+      <a href="/account?view=dashboard&tab=profile&uid=me"  class="sidebar-link">Личный кабинет</a>
+      <a href="/auth?mode=signin&provider=local&redirect=1"    class="sidebar-link">Вход</a>
+      <a href="/auth?mode=signup&provider=local&step=1" class="sidebar-link">Регистрация</a>
+      <a href="/handler?action=support&ref=nav&session=0" class="sidebar-link">Контакты</a>
+      <div class="sidebar-box">
+        <h4>Хотите заказать услугу?</h4>
+        <p>Свяжитесь с нами для обсуждения деталей.</p>
+        <a href="/handler?action=support&ref=nav&session=0" style="display:inline-block;background:#333;color:white;padding:10px 20px;text-decoration:none;border-radius:4px;font-size:14px;">Связаться</a>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function esc(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+
+    function formatDate(str) {
+      const d = new Date(str);
+      if (isNaN(d)) return str;
+      return d.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' });
+    }
+
+    function buildCard(r) {
+      const filled = '★'.repeat(Math.max(0, Math.min(5, parseInt(r.rating))));
+      const empty  = '☆'.repeat(5 - filled.length);
+      const badge  = r.verified ? '<span class="verified-badge" title="Верифицированный аккаунт"><i class="fas fa-certificate"></i><i class="fas fa-check"></i></span>' : '';
+      return `<div class="review-card">
+        <div class="review-top">
+          <div class="reviewer">
+            <div class="reviewer-avatar"><i class="fas fa-user"></i></div>
+            <div>
+              <div class="reviewer-name">${esc(r.name)}${badge}</div>
+              <div class="reviewer-meta">${formatDate(r.created_at)}</div>
+            </div>
+          </div>
+          <div class="stars">${filled}${empty}</div>
+        </div>
+        ${r.service ? `<div class="review-service">${esc(r.service)}</div>` : ''}
+        <p class="review-text">${esc(r.text)}</p>
+      </div>`;
+    }
+
+    function pluralReviews(n) {
+      const mod10 = n % 10, mod100 = n % 100;
+      if (mod10 === 1 && mod100 !== 11) return `${n} отзыв`;
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${n} отзыва`;
+      return `${n} отзывов`;
+    }
+
+    async function loadReviews() {
+      try {
+        const res  = await fetch('/reviews.php');
+        const data = await res.json();
+        const list = document.getElementById('reviewsList');
+        if (!data.ok || !data.reviews || !data.reviews.length) {
+          list.innerHTML = '<div class="reviews-loading">Отзывов пока нет — оставьте первый!</div>';
+          document.getElementById('reviewsCount').textContent = '0 отзывов';
+          return;
+        }
+        list.innerHTML = data.reviews.map(buildCard).join('');
+        document.getElementById('reviewsCount').textContent = pluralReviews(data.reviews.length);
+      } catch(e) {
+        // Демо без сервера
+        const demo = [
+          { name:'Иван Иванов',     rating:5, service:'Услуга №1', text:'Отличная работа! Всё сделали быстро и качественно. Очень рекомендую.', created_at:'2025-01-15T10:00:00' },
+          { name:'Мария Петрова',   rating:5, service:'Услуга №2', text:'Очень довольна результатом. Профессиональный подход, вежливые сотрудники.', created_at:'2025-02-03T14:30:00' },
+          { name:'Алексей Сидоров', rating:4, service:'Услуга №3', text:'Хорошая компания, работают профессионально. Немного задержали сроки, но результатом доволен.', created_at:'2025-03-22T09:15:00' },
+        ];
+        document.getElementById('reviewsList').innerHTML = demo.map(buildCard).join('');
+        document.getElementById('reviewsCount').textContent = pluralReviews(demo.length) + ' (демо)';
+      }
+    }
+
+    // Проверяем авторизацию и подгружаем имя пользователя
+    async function checkAuth() {
+      try {
+        const res  = await fetch('/profile.php');
+        const data = await res.json();
+        if (data.ok && data.user) {
+          const fullName = data.user.first_name + ' ' + data.user.last_name;
+          document.getElementById('userName').textContent = fullName;
+          document.getElementById('userGreeting').style.display = 'block';
+          document.getElementById('submitBtn').disabled = false;
+        } else {
+          document.getElementById('loginWarning').style.display = 'block';
+          document.getElementById('submitBtn').disabled = true;
+          document.getElementById('submitBtn').title = 'Войдите в аккаунт чтобы оставить отзыв';
+        }
+      } catch(e) {
+        document.getElementById('loginWarning').style.display = 'block';
+        document.getElementById('submitBtn').disabled = true;
+      }
+    }
+
+    async function submitReview() {
+      const service = document.getElementById('r_service').value;
+      const text    = document.getElementById('r_text').value.trim();
+      const rating  = document.querySelector('input[name="rating"]:checked');
+      const errBox  = document.getElementById('errorMsg');
+      const okBox   = document.getElementById('successMsg');
+      errBox.style.display = okBox.style.display = 'none';
+
+      if (!rating) { errBox.textContent = 'Выберите оценку';    errBox.style.display='block'; return; }
+      if (!text)   { errBox.textContent = 'Напишите ваш отзыв'; errBox.style.display='block'; return; }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+
+      try {
+        const res  = await fetch('/reviews.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service, text, rating: parseInt(rating.value) })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          okBox.style.display = 'block';
+          document.getElementById('r_service').value = '';
+          document.getElementById('r_text').value = '';
+          document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+          await loadReviews();
+          document.getElementById('reviewsWrap').scrollTop = 0;
+        } else {
+          errBox.textContent = data.message || 'Ошибка отправки';
+          errBox.style.display = 'block';
+        }
+      } catch(e) {
+        errBox.textContent = 'Сервер недоступен';
+        errBox.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить отзыв';
+    }
+
+    loadReviews();
+    checkAuth();
+  </script>
+</body>
+</html>

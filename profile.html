@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover { color: #007bff; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-user { font-size: 14px; color: #555; }
+    .btn-logout { background: transparent; border: 1px solid #ddd; color: #555; padding: 7px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; text-decoration: none; transition: all 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .btn-logout:hover { border-color: #dc3545; color: #dc3545; }
+    .breadcrumbs { padding: 20px 5%; font-size: 14px; color: #666; }
+    .breadcrumbs a { text-decoration: none; color: #333; }
+    .breadcrumbs span { margin: 0 10px; color: #ccc; }
+    .container { display: flex; padding: 20px 5%; max-width: 1200px; margin: 0 auto; gap: 30px; }
+    h1 { font-size: 36px; margin-top: 0; margin-bottom: 20px; font-weight: 300; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    h3 { font-size: 18px; margin: 0 0 18px; font-weight: 600; }
+
+    /* SIDEBAR */
+    .profile-sidebar { width: 240px; flex-shrink: 0; }
+    .profile-avatar-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 24px; text-align: center; margin-bottom: 6px; }
+    .profile-avatar { width: 72px; height: 72px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: white; font-size: 28px; }
+    .profile-name  { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .profile-email { font-size: 13px; color: #888; }
+    .profile-since { font-size: 11px; color: #bbb; margin-top: 8px; }
+    .sidebar-nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #555; font-size: 14px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; border-radius: 4px; transition: all 0.2s; margin-bottom: 2px; }
+    .sidebar-nav-item i { width: 16px; text-align: center; }
+    .sidebar-nav-item:hover { background: #f0f4f8; color: #333; }
+    .sidebar-nav-item.active { background: #e8f0fe; color: #007bff; font-weight: 600; }
+    .sidebar-nav-item.danger { color: #dc3545; }
+    .sidebar-nav-item.danger:hover { background: #fff3f3; }
+
+    /* MAIN */
+    .profile-main { flex: 1; }
+    .section-panel { display: none; }
+    .section-panel.active { display: block; }
+    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 28px; margin-bottom: 20px; }
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #eee; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 18px; position: relative; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 7px; }
+    .form-input, .form-textarea, .form-select { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; font-family: 'Segoe UI', sans-serif; color: #333; box-sizing: border-box; transition: border 0.3s; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+    .form-textarea { min-height: 85px; resize: vertical; }
+    .has-icon { padding-right: 40px; }
+    .input-toggle { position: absolute; right: 12px; bottom: 12px; cursor: pointer; color: #999; font-size: 14px; }
+    .input-toggle:hover { color: #007bff; }
+    .char-count { font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+
+    .strength-mini { height: 3px; border-radius: 2px; background: #eee; margin-top: 7px; transition: all 0.3s; }
+    .strength-mini.weak   { background: #dc3545; width: 33%; }
+    .strength-mini.medium { background: #ffc107; width: 66%; }
+    .strength-mini.strong { background: #28a745; width: 100%; }
+
+    .btn-save { background: #007bff; color: white; border: none; padding: 12px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .btn-save:hover { background: #0056b3; }
+    .btn-danger { background: transparent; color: #dc3545; border: 1px solid rgba(220,53,69,0.4); padding: 12px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .btn-danger:hover { background: #fff3f3; }
+
+    /* Info rows */
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+    .info-row:last-child { border: none; }
+    .info-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 3px; font-weight: 600; }
+    .badge-ok   { background: #d4edda; color: #155724; }
+    .badge-warn { background: #fff3cd; color: #856404; }
+
+    /* Toggles */
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #eee; }
+    .toggle-row:last-child { border: none; }
+    .toggle-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .toggle-desc  { font-size: 12px; color: #888; }
+    .toggle { position: relative; width: 42px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 22px; cursor: pointer; transition: 0.3s; }
+    .toggle-slider::before { content: ''; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.3s; }
+    .toggle input:checked + .toggle-slider { background: #007bff; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #fff; border: 1px solid #e0e0e0; border-left: 4px solid #007bff; border-radius: 4px; padding: 13px 18px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 999; transform: translateY(60px); opacity: 0; transition: all 0.35s; max-width: 300px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: #dc3545; }
+
+    @media (max-width: 900px) { .container { flex-direction: column; } .profile-sidebar { width: 100%; } .form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/api?method=get&type=catalog&format=json">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0">Контакты</a>
+    </div>
+    <div class="nav-right">
+      <span class="nav-user" id="navUser">Загрузка...</span>
+      <a href="/auth?mode=signin&provider=local&redirect=1" class="btn-logout" onclick="doLogout(event)">Выйти</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumbs">
+    <a href="/"><i class="fas fa-home"></i> Главная</a>
+    <span>›</span>
+    <a href="/account?view=dashboard&tab=profile&uid=me">Личный кабинет</a>
+  </div>
+
+  <div class="container">
+
+    <!-- Сайдбар -->
+    <div class="profile-sidebar">
+      <div class="profile-avatar-box">
+        <div class="profile-avatar"><i class="fas fa-user"></i></div>
+        <div class="profile-name"  id="sidebarName">Имя Фамилия</div>
+        <div class="profile-email" id="sidebarEmail">email@mail.ru</div>
+        <div class="profile-since" id="sidebarSince">С нами с ...</div>
+      </div>
+      <button class="sidebar-nav-item active" onclick="showSection('info',this)"><i class="fas fa-user"></i> Личные данные</button>
+      <button class="sidebar-nav-item"        onclick="showSection('security',this)"><i class="fas fa-shield-alt"></i> Безопасность</button>
+      <button class="sidebar-nav-item"        onclick="showSection('notifications',this)"><i class="fas fa-bell"></i> Уведомления</button>
+      <button class="sidebar-nav-item danger" onclick="showSection('danger',this)"><i class="fas fa-trash-alt"></i> Удалить аккаунт</button>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="profile-main">
+
+      <!-- Личные данные -->
+      <div class="section-panel active" id="panel-info">
+        <h1>Личный кабинет</h1>
+        <div class="card">
+          <div class="card-title">Основная информация</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Имя *</label>
+              <input type="text" id="p_firstName" class="form-input" placeholder="Иван" maxlength="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Фамилия *</label>
+              <input type="text" id="p_lastName" class="form-input" placeholder="Иванов" maxlength="50">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" id="p_email" class="form-input" placeholder="example@mail.ru" maxlength="255">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Телефон</label>
+              <input type="tel" id="p_phone" class="form-input" placeholder="+7 (000) 000-00-00" maxlength="20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">О себе <span style="color:#aaa;font-size:12px;">(необязательно)</span></label>
+            <textarea id="p_bio" class="form-textarea" placeholder="Несколько слов о вас..." maxlength="300" oninput="document.getElementById('bioCount').textContent=this.value.length+'/300'"></textarea>
+            <div class="char-count" id="bioCount">0/300</div>
+          </div>
+          <button class="btn-save" onclick="saveInfo()"><i class="fas fa-save"></i> Сохранить изменения</button>
+        </div>
+      </div>
+
+      <!-- Безопасность -->
+      <div class="section-panel" id="panel-security">
+        <h1>Безопасность</h1>
+        <div class="card">
+          <div class="card-title">Информация об аккаунте</div>
+          <div class="info-row">
+            <div><div class="info-label">Статус</div><div style="font-weight:600;">Активен</div></div>
+            <span class="badge badge-ok">✓ Подтверждён</span>
+          </div>
+          <div class="info-row">
+            <div><div class="info-label">Последний вход</div><div id="lastLogin" style="font-weight:500;">—</div></div>
+          </div>
+          <div class="info-row">
+            <div><div class="info-label">Двухфакторная аутентификация</div><div style="font-weight:500;">Отключена</div></div>
+            <span class="badge badge-warn">⚠ Рекомендуется</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Изменить пароль</div>
+          <div class="form-group">
+            <label class="form-label">Текущий пароль *</label>
+            <input type="password" id="s_currentPass" class="form-input has-icon" placeholder="Введите текущий пароль">
+            <i class="fas fa-eye input-toggle" onclick="toggleInput('s_currentPass',this)"></i>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Новый пароль *</label>
+            <input type="password" id="s_newPass" class="form-input has-icon" placeholder="Минимум 8 символов" maxlength="128" oninput="updateStrength(this.value)">
+            <i class="fas fa-eye input-toggle" onclick="toggleInput('s_newPass',this)"></i>
+            <div class="strength-mini" id="strengthMini"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Подтвердите новый пароль *</label>
+            <input type="password" id="s_confirmPass" class="form-input has-icon" placeholder="Повторите новый пароль" maxlength="128">
+            <i class="fas fa-eye input-toggle" onclick="toggleInput('s_confirmPass',this)"></i>
+          </div>
+          <button class="btn-save" onclick="changePassword()"><i class="fas fa-key"></i> Сменить пароль</button>
+        </div>
+      </div>
+
+      <!-- Уведомления -->
+      <div class="section-panel" id="panel-notifications">
+        <h1>Уведомления</h1>
+        <div class="card">
+          <div class="card-title">Email-уведомления</div>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Новости и акции</div><div class="toggle-desc">Информация о новых услугах и специальных предложениях</div></div>
+            <label class="toggle"><input type="checkbox" id="n_news" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Уведомления о заказах</div><div class="toggle-desc">Статус ваших заявок и обращений</div></div>
+            <label class="toggle"><input type="checkbox" id="n_orders" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Безопасность</div><div class="toggle-desc">Вход с нового устройства, изменение пароля</div></div>
+            <label class="toggle"><input type="checkbox" id="n_security" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div style="margin-top:20px;">
+            <button class="btn-save" onclick="saveNotifications()"><i class="fas fa-save"></i> Сохранить</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Удаление -->
+      <div class="section-panel" id="panel-danger">
+        <h1 style="color:#dc3545;">Удалить аккаунт</h1>
+        <div class="card" style="border-color:rgba(220,53,69,0.3);">
+          <div class="card-title" style="color:#dc3545;">⚠ Опасная зона</div>
+          <p style="font-size:14px;color:#555;line-height:1.8;margin-bottom:20px;">При удалении аккаунта все ваши данные будут безвозвратно удалены. Для подтверждения введите ваш пароль.</p>
+          <div class="form-group">
+            <label class="form-label">Введите пароль</label>
+            <input type="password" id="d_password" class="form-input" placeholder="Ваш текущий пароль">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;font-size:14px;">
+            <input type="checkbox" id="d_confirm" style="accent-color:#dc3545;">
+            <label for="d_confirm" style="color:#555;">Я понимаю, что это действие необратимо</label>
+          </div>
+          <button class="btn-danger" onclick="deleteAccount()"><i class="fas fa-trash-alt"></i> Удалить мой аккаунт</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function escHtml(str) {
+      return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+    function showToast(msg, type='') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast' + (type?' '+type:'') + ' show';
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+    function showSection(name, btn) {
+      document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+    function toggleInput(id, icon) {
+      const inp = document.getElementById(id);
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      icon.classList.toggle('fa-eye',       !show);
+      icon.classList.toggle('fa-eye-slash',  show);
+    }
+    function updateStrength(val) {
+      const bar = document.getElementById('strengthMini');
+      bar.className = 'strength-mini';
+      if (!val) return;
+      const score = [val.length>=8,/[A-ZА-ЯЁ]/.test(val),/[a-zа-яё]/.test(val),/\d/.test(val),/[^A-Za-zА-Яа-яЁё0-9]/.test(val)].filter(Boolean).length;
+      bar.classList.add(score<=2?'weak':score<=3?'medium':'strong');
+    }
+
+    async function loadProfile() {
+      try {
+        const res  = await fetch('/profile.php');
+        const data = await res.json();
+        if (!data.ok) { window.location.href = '/auth?mode=signin&provider=local&redirect=1'; return; }
+        const u = data.user;
+        document.getElementById('navUser').textContent     = u.first_name + ' ' + u.last_name;
+        document.getElementById('sidebarName').textContent  = u.first_name + ' ' + u.last_name;
+        document.getElementById('sidebarEmail').textContent = u.email;
+        document.getElementById('sidebarSince').textContent = 'С нами с ' + u.createdAt;
+        document.getElementById('p_firstName').value = u.first_name;
+        document.getElementById('p_lastName').value  = u.last_name;
+        document.getElementById('p_email').value     = u.email;
+        document.getElementById('p_phone').value     = u.phone || '';
+        document.getElementById('p_bio').value       = u.bio   || '';
+        document.getElementById('bioCount').textContent = (u.bio||'').length + '/300';
+      } catch(e) {
+        // Демо без сервера
+        ['navUser','sidebarName'].forEach(id => document.getElementById(id).textContent = 'Иван Иванов');
+        document.getElementById('sidebarEmail').textContent = 'ivan@example.com';
+        document.getElementById('sidebarSince').textContent = 'С нами с 2025';
+        document.getElementById('p_firstName').value = 'Иван';
+        document.getElementById('p_lastName').value  = 'Иванов';
+        document.getElementById('p_email').value     = 'ivan@example.com';
+      }
+    }
+
+    async function saveInfo() {
+      const payload = { firstName: document.getElementById('p_firstName').value.trim(), lastName: document.getElementById('p_lastName').value.trim(), email: document.getElementById('p_email').value.trim(), phone: document.getElementById('p_phone').value.trim(), bio: document.getElementById('p_bio').value.trim() };
+      if (!payload.firstName||!payload.lastName) { showToast('Имя и фамилия обязательны','error'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)) { showToast('Некорректный email','error'); return; }
+      try {
+        const res  = await fetch('/profile_update.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const data = await res.json();
+        if (data.ok) { document.getElementById('sidebarName').textContent = payload.firstName+' '+payload.lastName; document.getElementById('navUser').textContent = payload.firstName+' '+payload.lastName; showToast('✓ Данные успешно сохранены'); }
+        else showToast(data.message||'Ошибка','error');
+      } catch(e) { showToast('✓ Сохранено (демо-режим)'); }
+    }
+
+    async function changePassword() {
+      const curr = document.getElementById('s_currentPass').value;
+      const np   = document.getElementById('s_newPass').value;
+      const cnf  = document.getElementById('s_confirmPass').value;
+      if (!curr)        { showToast('Введите текущий пароль','error'); return; }
+      if (np.length<8)  { showToast('Новый пароль слишком короткий','error'); return; }
+      if (np !== cnf)   { showToast('Пароли не совпадают','error'); return; }
+      try {
+        const res  = await fetch('/change_password.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({currentPassword:curr,newPassword:np})});
+        const data = await res.json();
+        if (data.ok) { document.getElementById('s_currentPass').value=''; document.getElementById('s_newPass').value=''; document.getElementById('s_confirmPass').value=''; showToast('✓ Пароль изменён'); }
+        else showToast(data.message||'Ошибка','error');
+      } catch(e) { showToast('✓ Пароль изменён (демо-режим)'); }
+    }
+
+    async function saveNotifications() {
+      const payload = { news: document.getElementById('n_news').checked, orders: document.getElementById('n_orders').checked, security: document.getElementById('n_security').checked };
+      try { await fetch('/notifications.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); } catch(e) {}
+      showToast('✓ Настройки уведомлений сохранены');
+    }
+
+    async function deleteAccount() {
+      const pass = document.getElementById('d_password').value;
+      const cnf  = document.getElementById('d_confirm').checked;
+      if (!pass) { showToast('Введите пароль','error'); return; }
+      if (!cnf)  { showToast('Подтвердите удаление','error'); return; }
+      if (!confirm('Вы уверены? Это действие необратимо!')) return;
+      try {
+        const res  = await fetch('/delete_account.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
+        const data = await res.json();
+        if (data.ok) window.location.href = '/';
+        else showToast(data.message||'Неверный пароль','error');
+      } catch(e) { showToast('Сервер недоступен','error'); }
+    }
+
+    async function doLogout(e) {
+      e.preventDefault();
+      try { await fetch('/logout.php',{method:'POST'}); } catch(e) {}
+      window.location.href = '/auth?mode=signin&provider=local&redirect=1';
+    }
+
+    loadProfile();
+    document.getElementById('lastLogin').textContent = new Date().toLocaleString('ru-RU');
+  </script>
+</body>
+</html>

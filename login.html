@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — ООО «DEC16s»</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f9f9f9; }
+    .main-nav { background-color: #fff; padding: 15px 5%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .main-nav .logo { font-weight: bold; font-size: 20px; text-decoration: none; color: #333; }
+    .main-nav a { text-decoration: none; color: #333; margin-right: 20px; font-weight: 500; }
+    .main-nav a:hover { color: #007bff; }
+
+    .auth-wrapper { display: flex; justify-content: center; padding: 0 20px 60px; }
+    .login-box { width: 100%; max-width: 580px; background: #fff; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .login-tabs { display: flex; border-bottom: 1px solid #ddd; }
+    .login-tab { flex: 1; padding: 16px; text-align: center; font-size: 15px; font-weight: 600; text-decoration: none; color: #666; border-bottom: 2px solid transparent; transition: all 0.3s; background: #f7f7f7; }
+    .login-tab.active { color: #007bff; border-bottom-color: #007bff; background: #fff; }
+    .login-tab:hover { color: #007bff; }
+    .login-body { padding: 30px; }
+    .login-body h2 { margin: 0 0 6px; font-size: 22px; font-weight: 500; }
+    .login-body .subtitle { font-size: 14px; color: #666; margin-bottom: 24px; }
+
+    label { display: block; margin: 14px 0 6px; font-weight: 500; font-size: 14px; color: #555; }
+    input[type="text"], input[type="password"], input[type="email"] { width: 100%; padding: 11px 40px 11px 13px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; transition: border 0.3s; font-family: 'Segoe UI', sans-serif; }
+    input:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }
+    input::placeholder { color: #aaa; }
+
+    .password-wrapper { position: relative; }
+    .toggle-password { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999; font-size: 15px; transition: color 0.3s; }
+    .toggle-password:hover { color: #007bff; }
+
+    .options { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 14px; }
+    .options label { margin: 0; display: flex; align-items: center; cursor: pointer; font-weight: 400; }
+    .options input[type="checkbox"] { width: auto; margin-right: 8px; padding: 0; }
+    .options a { color: #007bff; text-decoration: none; }
+    .options a:hover { text-decoration: underline; }
+
+    .login-btn { margin-top: 22px; width: 100%; padding: 13px; cursor: pointer; background: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 16px; font-weight: 600; transition: background 0.3s; font-family: 'Segoe UI', sans-serif; }
+    .login-btn:hover { background: #0056b3; }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .error-msg { color: #dc3545; margin-top: 14px; font-size: 14px; text-align: center; min-height: 20px; background: #fff3f3; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; display: none; }
+    .lockout-msg { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; border-radius: 4px; padding: 10px; font-size: 14px; margin-bottom: 16px; display: none; }
+
+    .social-login { border-top: 1px solid #eee; margin-top: 24px; padding-top: 20px; text-align: center; font-size: 14px; color: #666; }
+    .social-buttons { display: flex; justify-content: center; gap: 14px; margin-top: 14px; }
+    .social-btn { width: 48px; height: 48px; border: 1px solid #ddd; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fff; transition: transform 0.2s, box-shadow 0.2s; }
+    .social-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .social-btn.yandex { background: #fc3f1d; border: none; }
+
+    @media (max-width: 600px) { .main-nav { flex-direction: column; gap: 10px; } .main-nav a { margin: 0 10px; } }
+  </style>
+</head>
+<body>
+
+  <nav class="main-nav">
+    <a href="/" class="logo">ООО «DEC16s»</a>
+    <div>
+      <a href="/">Главная</a>
+      <a href="/system?module=info&section=company&ver=2">О компании</a>
+      <a href="/catalog?method=get&type=list&format=json">Услуги</a>
+      <a href="/list?clickstat=yes&p_num=1&func=webdomain&tab_id=25">Отзывы</a>
+      <a href="/handler?action=support&ref=nav&session=0">Контакты</a>
+    </div>
+  </nav>
+
+  <div class="auth-wrapper">
+    <div class="login-box">
+      <div class="login-tabs">
+        <a href="/auth?mode=signin&provider=local&redirect=1"    class="login-tab active">Вход</a>
+        <a href="/auth?mode=signup&provider=local&step=1" class="login-tab">Регистрация</a>
+      </div>
+      <div class="login-body">
+        <h2>Вход на сайт</h2>
+        <p class="subtitle">Войдите в аккаунт для доступа к личному кабинету.</p>
+
+        <div class="lockout-msg" id="lockoutMsg"></div>
+        <div class="error-msg"   id="errorMsg"></div>
+
+        <label for="loginInput">Email или телефон</label>
+        <input type="text" id="loginInput" placeholder="Введите email или телефон">
+
+        <label for="password">Пароль</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Введите пароль">
+          <i class="fas fa-eye toggle-password" id="togglePass" onclick="togglePassword()"></i>
+        </div>
+
+        <div class="options">
+          <label><input type="checkbox" id="remember"> Запомнить меня</label>
+          <a href="#">Забыли пароль?</a>
+        </div>
+
+        <button class="login-btn" id="loginBtn" onclick="doLogin()">Войти</button>
+
+        <div class="social-login">
+          <p>Войти через соцсети</p>
+          <div class="social-buttons">
+            <button class="social-btn" onclick="loginGoogle()" title="Google">
+              <i class="fab fa-google" style="font-size:22px;color:#DB4437;"></i>
+            </button>
+            <button class="social-btn yandex" onclick="loginYandex()" title="Яндекс">
+              <i class="fab fa-yandex" style="font-size:22px;color:white;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let attempts = 0;
+    let lockUntil = 0;
+
+    function togglePassword() {
+      const inp  = document.getElementById('password');
+      const icon = document.getElementById('togglePass');
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      icon.classList.toggle('fa-eye',       !show);
+      icon.classList.toggle('fa-eye-slash',  show);
+    }
+
+    document.getElementById('password').addEventListener('keypress', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    async function doLogin() {
+      const email    = document.getElementById('loginInput').value.trim();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('remember').checked;
+      const errBox   = document.getElementById('errorMsg');
+      const lockBox  = document.getElementById('lockoutMsg');
+      errBox.style.display  = 'none';
+      lockBox.style.display = 'none';
+
+      if (Date.now() < lockUntil) {
+        const sec = Math.ceil((lockUntil - Date.now()) / 1000);
+        lockBox.textContent = `Слишком много попыток. Подождите ${sec} сек.`;
+        lockBox.style.display = 'block';
+        return;
+      }
+      if (!email || !password) {
+        errBox.textContent = 'Заполните все поля';
+        errBox.style.display = 'block';
+        return;
+      }
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true; btn.textContent = 'Вход...';
+      try {
+        const res  = await fetch('/login.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password, remember}) });
+        const data = await res.json();
+        if (data.ok) { attempts = 0; window.location.href = '/account?view=dashboard&tab=profile&uid=me'; }
+        else {
+          attempts++;
+          if (attempts >= 5) {
+            lockUntil = Date.now() + 30000;
+            lockBox.textContent = 'Слишком много попыток. Подождите 30 секунд.';
+            lockBox.style.display = 'block';
+            btn.disabled = true;
+            setTimeout(() => { btn.disabled = false; btn.textContent = 'Войти'; attempts = 0; }, 30000);
+          } else {
+            errBox.textContent = data.message || 'Неверный email или пароль';
+            errBox.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Войти';
+          }
+        }
+      } catch(e) {
+        errBox.textContent = 'Сервер недоступен. Подключите login.php';
+        errBox.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Войти';
+      }
+    }
+    function loginGoogle()  { alert('Подключите Google OAuth 2.0 на сервере'); }
+    function loginYandex()  { alert('Подключите Яндекс OAuth на сервере'); }
+  </script>
+</body>
+</html>
